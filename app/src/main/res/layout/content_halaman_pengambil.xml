@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_halaman_utama"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="rot.user.tekno.com.rothrow.HalamanUtamaActivity"
+    tools:showIn="@layout/app_bar_halaman_pengambil">
+
+    <!--<fragment-->
+        <!--android:id="@+id/map"-->
+        <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/layoutPopup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:visibility="gone"-->
+        <!--android:background="@color/colorPrimary">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/imgPhoto"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:src="@drawable/ic_account"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_nama_pembuang"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@+id/imgPhoto"-->
+            <!--android:text="Depi Yulyanti"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:textSize="9pt"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textColor="#fff"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_harga"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@+id/tv_nama_pembuang"-->
+            <!--android:text="Rp. 3000"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="30dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:textSize="9pt"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textColor="#fff"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_jns_sampah"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@+id/imgPhoto"-->
+            <!--android:text="Sampah Kering"-->
+            <!--android:layout_below="@+id/tv_harga"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:textSize="9pt"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textColor="#fff"-->
+            <!--/>-->
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:id="@+id/btnOrder"-->
+            <!--android:layout_toRightOf="@+id/tv_jns_sampah"-->
+            <!--android:text="Pick Up"-->
+            <!--android:layout_below="@+id/tv_harga"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:background="@drawable/rounded_white"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_mode_sampah"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Harga Sudah DItentukan"-->
+            <!--android:layout_below="@+id/imgPhoto"-->
+            <!--android:layout_margin="10dp"-->
+
+            <!--android:textSize="9pt"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textColor="#fff"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container">
+    </FrameLayout>
+</RelativeLayout>

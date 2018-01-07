@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_profile_pengambil"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="rot.user.tekno.com.rothrow.ProfilePengambilActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="@color/colorWhite"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginLeft="16dp"
+            android:src="@mipmap/ic_launcher"
+            app:civ_circle_background_color="#a5374b"
+            app:civ_border_width="0dp"/>
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/profile_image"
+            android:text="Depi Yulyanti"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:id="@+id/tv_alamat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/profile_image"
+            android:layout_below="@+id/tv_name"
+            android:text="Depok"
+            android:textSize="12sp"
+            android:layout_marginLeft="10dp"/>
+        <LinearLayout
+            android:id="@+id/ll_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/profile_image"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/tv_alamat">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/bintang"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/bintang"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/bintang"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/bintang"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/bintang"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ll_star"
+            android:layout_marginLeft="4dp"
+            android:layout_below="@id/tv_alamat"
+            android:text="(0)"/>
+
+        <TextView
+            android:id="@+id/tv_join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_star"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="8dp"
+            android:text="Bergabung pada 03/11/2017"
+            android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/tv_verify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_join"
+            android:layout_marginLeft="8dp"
+            android:text="Aktif"
+            android:textColor="#3ebd1f"
+            android:textSize="12sp"/>
+        <CheckBox
+            android:id="@+id/cb"
+            android:layout_width="24dp"
+            android:layout_height="17dp"
+            android:layout_toRightOf="@+id/tv_verify"
+            android:drawablePadding="0dp"
+            android:scaleX="0.60"
+            android:scaleY="0.60"
+            android:buttonTint="#3ebd1f"
+            android:layout_below="@+id/tv_join"
+            android:checked="true"
+            android:clickable="false"
+            android:focusable="false"/>
+        <TextView
+            android:id="@+id/tv_hp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_verify"
+            android:layout_marginLeft="8dp"
+            android:text="rothrow mobile apps"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_hp"
+            android:layout_marginLeft="8dp"
+            android:text="galihsup23@gmail.com"
+            android:textSize="12sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_email"
+            android:layout_marginTop="16sp"
+            android:background="#9c9c9c"/>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pengambil"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="rot.user.tekno.com.rothrow.PengambilActivity">
+
+    <fragment
+        android:id="@+id/mapPengambil"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="rot.user.tekno.com.rothrow.PengambilActivity" />
+    <!--android:visibility="gone"-->
+    <RelativeLayout
+        android:id="@+id/layoutPopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_toRightOf="@+id/imgPhoto"
+            android:layout_margin="5dp"
+            android:id="@+id/txtNamaPembuang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nama Pembuang"
+            android:textSize="9pt"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_toRightOf="@+id/imgPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtJnsSampah"
+            android:text="Jenis Sampah"
+            android:layout_below="@+id/txtNamaPembuang"
+            android:textSize="9pt"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/imgPhoto"
+            android:layout_margin="5dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtHarga"
+            android:text="Rp. 5000"
+            android:layout_toRightOf="@+id/txtNamaPembuang"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="40dp"
+            android:textSize="9pt"
+            android:textStyle="bold"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/btnPick"
+            android:text="Pick Up"
+            android:layout_toRightOf="@+id/txtJnsSampah"
+            android:layout_below="@+id/txtHarga"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="75dp"
+            android:background="@drawable/rounded_white"/>
+    </RelativeLayout>
+</RelativeLayout>
