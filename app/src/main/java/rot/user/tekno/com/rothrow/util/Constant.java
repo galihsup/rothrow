@@ -13,6 +13,7 @@ public class Constant {
 
     public static final String ENDPOINT_GET_ORDER = BASE_URL + "order/getdata";
     public static final String ENDPOINT_INSERT_ORDER = BASE_URL + "order/insert_order2";
+    public static final String ENDPOINT_UPDATE_ORDER = BASE_URL + "order/edit_order/";
 
     public static final String KEY_SHAREDPREFS_USER = "user";
     public static final String KEY_SHAREDPREFS_LOGIN_STATUS = "statusLogin";

@@ -216,7 +216,6 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                             AlertDialog dialog = builder.create();
                             dialog.show();
                             lv_nampil_foto.setVisibility(View.VISIBLE);
-                            iv_foto.setVisibility(View.VISIBLE);
                             tv_nama_foto.setVisibility(View.VISIBLE);
                         }
                     });
@@ -224,6 +223,7 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                         @Override
                         public void onClick(View v) {
                             getFotoSampah(12);
+                            iv_foto.setVisibility(View.VISIBLE);
                         }
                     });
                     mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {

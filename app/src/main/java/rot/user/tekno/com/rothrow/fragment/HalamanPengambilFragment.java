@@ -5,32 +5,26 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.location.Location;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.esafirm.imagepicker.features.ImagePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,9 +38,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +50,6 @@ import rot.user.tekno.com.rothrow.model.ListPengambil;
 import rot.user.tekno.com.rothrow.util.Constant;
 import rot.user.tekno.com.rothrow.util.MLocation;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -68,10 +57,11 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
 
     private GoogleMap mMap;
     float zoomLevel = 16.0f;
-    private String email;
-    private String namaUser;
+    public String email;
+    public String namaUser;
     private String token;
     private String url;
+    public int ido;
 
     Gson gson;
     TextView nm;
@@ -127,7 +117,6 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
         getDataPosisi();
-
         return view;
     }
 
@@ -196,7 +185,7 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
                         list_data = (List<ListPengambil>) gson.fromJson(jsonOutput, listType);
 
                     } else {
-                        //callback.onFinish(false, "failed");
+                        Toast.makeText(getContext(),"Get Failed",Toast.LENGTH_LONG).show();
                     }
                     putMarker();
                 }
@@ -217,6 +206,7 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     int x = (int) marker.getTag();
+                    ido = x;
                     final ListPengambil dataBaru = list_data.get(x);
                     tlTampil.setVisibility(View.VISIBLE);
                     nm.setText(dataBaru.getNama().toString(), TextView.BufferType.EDITABLE);
@@ -226,13 +216,13 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
                     btnOrder.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            post_update_order();
                             myLocation = MLocation.getLocation(getContext());
                             Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                                     Uri.parse("http://maps.google.com/maps?saddr="+
                                             String.valueOf(myLocation.getLatitude())+","+String.valueOf(myLocation.getLongitude())+
                                             "&daddr="+String.valueOf(dataBaru.getLat())+","+String.valueOf(dataBaru.getLang())));
                             startActivity(intent);
-//                            getFotoKtp(12);
                         }
                     });
 
@@ -246,5 +236,56 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
                 }
             });
         }
+    }
+
+    public void post_update_order(){
+        String link = Constant.ENDPOINT_UPDATE_ORDER+ido;
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String getLocalData = sharedPrefs.getString(Constant.KEY_SHAREDPREFS_TOKEN, null);
+        if (getLocalData!=null) {
+            token = getLocalData;
+        }
+        StringRequest req = new StringRequest(Request.Method.POST, link, listenerSuccess(), listenerErr()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "Bearer " + token);
+                return params;
+            }
+        };
+        AppsController.getInstance().addToRequestQueue(req);
+    }
+
+    private Response.ErrorListener listenerErr() {
+        return new Response.ErrorListener() {
+            @Override
+            public  void onErrorResponse(VolleyError error) {
+                Log.e("Error", "Login");
+                Log.e("Error", String.valueOf(error));
+            }
+        };
+    }
+
+    private Response.Listener<String> listenerSuccess() {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    Log.d("response", response);
+                    JSONObject json = new JSONObject(response);
+                    String message = json.getString("message");
+                    String status = json.getString("status");
+                    Log.d("message", message);
+                    if (status.equals("200"))
+                    {
+                        Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+//                        Intent intent = new Intent(getContext(), Login.class);
+//                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 }

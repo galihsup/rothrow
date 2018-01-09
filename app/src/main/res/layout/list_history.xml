@@ -13,14 +13,14 @@
 
         <ImageView
             android:id="@+id/iv_gambar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_margin="10dp"
             android:src="@drawable/ic_person"/>
 
         <TextView
             android:id="@+id/tv_nama_siswa"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Galih Suprayitno"
             android:layout_margin="10dp"
@@ -56,15 +56,20 @@
 
         <TextView
             android:id="@+id/tv_statussampah"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Status"
             android:textColor="#000"
             android:textSize="12sp"
-            android:layout_below="@+id/tv_hargasampah"
-            android:layout_toRightOf="@+id/iv_gambar"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/tv_nama_siswa"
+            android:layout_marginLeft="60dp"
             />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9c9c9c" />
 
     </RelativeLayout>
 

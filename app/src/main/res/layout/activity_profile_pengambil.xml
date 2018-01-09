@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#DCDCDC"
     tools:context="rot.user.tekno.com.rothrow.ProfilePengambilActivity">
 
     <android.support.v7.widget.Toolbar
@@ -38,22 +39,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:background="#fff">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_marginLeft="16dp"
+            android:layout_margin="10dp"
             android:src="@mipmap/ic_launcher"
-            app:civ_circle_background_color="#a5374b"
+            app:civ_circle_background_color="#1E88E5"
             app:civ_border_width="0dp"/>
+
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/profile_image"
             android:text="Depi Yulyanti"
             android:textSize="18sp"
