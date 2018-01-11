@@ -11,12 +11,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.media.ExifInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.util.Base64;
@@ -28,7 +31,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -59,8 +61,11 @@ import rot.user.tekno.com.rothrow.AppsController;
 import rot.user.tekno.com.rothrow.HalamanUtamaActivity;
 import rot.user.tekno.com.rothrow.R;
 import rot.user.tekno.com.rothrow.util.Constant;
+import rot.user.tekno.com.rothrow.util.MLocation;
 import rot.user.tekno.com.rothrow.util.Screen;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission_group.CAMERA;
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -69,7 +74,7 @@ import static android.app.Activity.RESULT_OK;
 public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    float zoomLevel = 13.0f;
+    float zoomLevel = 15.0f;
     private String email;
     private String namaUser;
     private String token;
@@ -79,7 +84,6 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
     ImageView iv_foto;
     ImageView iv_ambil_foto;
     LinearLayout lv_nampil_foto;
-    TextView tv_nama_foto;
     EditText etHarga;
     TextInputEditText spMode;
     LinearLayout tlTampil;
@@ -88,6 +92,9 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
     SearchView search;
     private SharedPreferences.Editor editor;
     TextInputEditText spjenis;
+    static final Integer LOCATION = 0x1;
+    static final Integer CAMERAS = 0x2;
+
     CharSequence jenis[] = {
             "Sampah Kering",
             "Sampah Basah"
@@ -110,6 +117,7 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_halaman_utama, container, false);
+        askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
 
         spjenis = (TextInputEditText)view.findViewById(R.id.et_pilih_jns_sampah);
         spMode = (TextInputEditText)view.findViewById(R.id.et_pilih_modesampah);
@@ -119,7 +127,6 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
         iv_foto = (ImageView) view.findViewById(R.id.iv_foto_sampah);
         iv_ambil_foto = (ImageView) view.findViewById(R.id.iv_ambil_foto);
         lv_nampil_foto = (LinearLayout) view.findViewById(R.id.lv_nampil_foto);
-        tv_nama_foto = (TextView) view.findViewById(R.id.tv_nama_foto);
 
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPrefs.edit();
@@ -147,6 +154,7 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
         final ViewGroup.LayoutParams params = llSearch.getLayoutParams();
 
 
+
         search = (SearchView) view.findViewById(R.id.svCari);
 
         //String cr = search.getQuery().toString();
@@ -171,7 +179,7 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                     lg = address.getLongitude();
                     mMap.clear();
                     mMap.addMarker(new MarkerOptions().position(latLng).title(query));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
@@ -216,7 +224,6 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                             AlertDialog dialog = builder.create();
                             dialog.show();
                             lv_nampil_foto.setVisibility(View.VISIBLE);
-                            tv_nama_foto.setVisibility(View.VISIBLE);
                         }
                     });
                     lv_nampil_foto.setOnClickListener(new View.OnClickListener() {
@@ -234,7 +241,6 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                             spMode.setVisibility(View.GONE);
                             etHarga.setVisibility(View.GONE);
                             iv_foto.setVisibility(View.GONE);
-                            tv_nama_foto.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -256,7 +262,6 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                                 params.put("lang", String.valueOf(lg));
                                 params.put("harga", etHarga.getText().toString());
                                 params.put("status", "Waiting");
-
                                 return params;
                             }
                         };
@@ -287,16 +292,17 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
         return view;
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void pindahLokasi(){
+        Location myLocation = MLocation.getLocation(getContext());
 
         // Add a marker in Jakarta and move the camera
-        LatLng jakarta = new LatLng(-6.252884, 106.8469404);
+        LatLng jakarta = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        //LatLng jakarta = new LatLng(-6.252887, 106.8469626);
         //mMap.addMarker(new MarkerOptions().position(jakarta).title("Marker in Jakarta"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(jakarta));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jakarta, zoomLevel));
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        //askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -306,9 +312,58 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         mMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            LatLng jakarta = new LatLng(-6.252887, 106.8469626);
+            //mMap.addMarker(new MarkerOptions().position(jakarta).title("Marker in Jakarta"));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(jakarta));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jakarta, zoomLevel));
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+
+            return;
+        }
+        else{
+            Location myLocation = MLocation.getLocation(getContext());
+
+            // Add a marker in Jakarta and move the camera
+            LatLng jakarta = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            //LatLng jakarta = new LatLng(-6.252887, 106.8469626);
+            //mMap.addMarker(new MarkerOptions().position(jakarta).title("Marker in Jakarta"));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(jakarta));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jakarta, zoomLevel));
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            //askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
+            /*if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+                return;
+            }*/
+            mMap.setMyLocationEnabled(true);
+        }
+
     }
 
     private Response.ErrorListener errListener() {
@@ -409,4 +464,128 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
     }
+
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), permission)) {
+
+                //This is called if user has denied the permission before
+                //In this case I am just asking the permission again
+                ActivityCompat.requestPermissions(this.getActivity(), new String[]{permission}, requestCode);
+
+            } else {
+
+                ActivityCompat.requestPermissions(this.getActivity(), new String[]{permission}, requestCode);
+            }
+        } else {
+            //Toast.makeText(Splash.this, "permission is already granted.", Toast.LENGTH_SHORT).show();
+            Log.d("Permission : ","permission is already granted.");
+        }
+    }
+
+    public void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(this.getActivity())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(ActivityCompat.checkSelfPermission(getContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED){
+            switch (requestCode) {
+                //Location
+                case 1:
+                    if (grantResults.length > 0) {
+
+                        boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                        //boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                        if (locationAccepted){
+                            Toast.makeText(getContext(),"Permission Granted, Now you can access location data."
+                                    ,Toast.LENGTH_LONG).show();
+                            //pindahLokasi();
+                        }
+                        else {
+                            Toast.makeText(getContext(),"Permission Denied, You cannot access location data."
+                                    ,Toast.LENGTH_LONG).show();
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+                                    showMessageOKCancel("You need to allow access to the permissions",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                        askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
+                                                    }
+                                                }
+                                            });
+                                    return;
+                                }
+                            }
+
+                        }
+                    }
+                    break;
+                case 2:
+                    if (grantResults.length > 0) {
+
+                        //boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                        boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                        if (cameraAccepted){
+                            Toast.makeText(getContext(),"Permission Granted, Now you can access camera.",Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(getContext(),"Permission Denied, You cannot access camera.",Toast.LENGTH_LONG).show();
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (shouldShowRequestPermissionRationale(CAMERA)) {
+                                    showMessageOKCancel("You need to allow access to the permissions",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                        askForPermission(Manifest.permission_group.CAMERA,CAMERAS);
+                                                    }
+                                                }
+                                            });
+                                    return;
+                                }
+                            }
+
+                        }
+                    }
+
+                    break;
+            }
+
+            //Toast.makeText(getContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+            //pindahLokasi();
+            Location myLocation = MLocation.getLocation(getContext());
+            LatLng jakarta = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jakarta, zoomLevel));
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.setMyLocationEnabled(true);
+        }else{
+            //Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+            showMessageOKCancel("You need to allow access to the permissions",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
+                            }
+                        }
+                    });
+            return;
+        }
+    }
+
 }

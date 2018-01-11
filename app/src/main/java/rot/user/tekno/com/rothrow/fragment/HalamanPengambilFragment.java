@@ -123,16 +123,18 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        Location myLocation = MLocation.getLocation(getContext());
         // Add a marker in Jakarta and move the camera
-        LatLng jakarta = new LatLng(-6.252884, 106.8469404);
+        LatLng jakarta = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         //mMap.addMarker(new MarkerOptions().position(jakarta).title("Marker in Jakarta"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jakarta, zoomLevel));
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(jakarta));
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -288,4 +290,5 @@ public class HalamanPengambilFragment extends Fragment implements OnMapReadyCall
             }
         };
     }
+
 }
