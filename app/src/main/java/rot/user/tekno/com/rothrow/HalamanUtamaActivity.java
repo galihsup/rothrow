@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -239,95 +240,8 @@ public class HalamanUtamaActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
-            switch (requestCode) {
-                //Location
-                case 1:
-                    if (grantResults.length > 0) {
-
-                        boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                        //boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                        if (locationAccepted){
-                            Toast.makeText(HalamanUtamaActivity.this,"Permission Granted, Now you can access location data."
-                                    ,Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Toast.makeText(HalamanUtamaActivity.this,"Permission Denied, You cannot access location data."
-                                    ,Toast.LENGTH_LONG).show();
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
-                                    showMessageOKCancel("You need to allow access to the permissions",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                        askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
-                                                    }
-                                                }
-                                            });
-                                    return;
-                                }
-                            }
-
-                        }
-                    }
-                    break;
-                case 2:
-                    if (grantResults.length > 0) {
-
-                        //boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                        boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                        if (cameraAccepted){
-                            Toast.makeText(HalamanUtamaActivity.this,"Permission Granted, Now you can access camera.",Toast.LENGTH_LONG).show();
-
-                        }
-                        else {
-                            Toast.makeText(HalamanUtamaActivity.this,"Permission Denied, You cannot access camera.",Toast.LENGTH_LONG).show();
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (shouldShowRequestPermissionRationale(CAMERA)) {
-                                    showMessageOKCancel("You need to allow access to the permissions",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                        askForPermission(Manifest.permission_group.CAMERA,CAMERAS);
-                                                    }
-                                                }
-                                            });
-                                    return;
-                                }
-                            }
-
-                        }
-                    }
-
-                    break;
-            }
-            /*Location myLocation = MLocation.getLocation(this);
-            LatLng jakarta = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jakarta, zoomLevel));
-            mMap.getUiSettings().setZoomControlsEnabled(true);
-            mMap.setMyLocationEnabled(true);*/
-            //Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-            //pindahLokasi();
-        }else{
-            //Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-            showMessageOKCancel("You need to allow access to the permissions",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                askForPermission(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION);
-                            }
-                        }
-                    });
-            return;
-        }
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

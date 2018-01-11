@@ -27,8 +27,10 @@ public class ListPengambil {
     public int harga;
     @SerializedName("ro_status")
     public String status;
+    @SerializedName("ro_gambar")
+    public String urlGambar;
 
-    public ListPengambil(int ido, int id, String nama, String jenisSp, String modePb, String alamat, double lat, double lang, int harga, String status) {
+    public ListPengambil(int ido, int id, String nama, String jenisSp, String modePb, String alamat, double lat, double lang, int harga, String status, String urlGambar) {
         this.ido = ido;
         this.id = id;
         this.nama = nama;
@@ -39,6 +41,7 @@ public class ListPengambil {
         this.lang = lang;
         this.harga = harga;
         this.status = status;
+        this.urlGambar = urlGambar;
     }
 
     public int getIdo() {
@@ -119,5 +122,13 @@ public class ListPengambil {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUrlGambar() {
+        return urlGambar;
+    }
+
+    public void setUrlGambar(String urlGambar) {
+        this.urlGambar = urlGambar;
     }
 }

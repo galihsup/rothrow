@@ -90,11 +90,12 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
     View view;
     Button btnSave;
     SearchView search;
+    String searchResult;
     private SharedPreferences.Editor editor;
     TextInputEditText spjenis;
     static final Integer LOCATION = 0x1;
     static final Integer CAMERAS = 0x2;
-
+    String foto;
     CharSequence jenis[] = {
             "Sampah Kering",
             "Sampah Basah"
@@ -127,7 +128,8 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
         iv_foto = (ImageView) view.findViewById(R.id.iv_foto_sampah);
         iv_ambil_foto = (ImageView) view.findViewById(R.id.iv_ambil_foto);
         lv_nampil_foto = (LinearLayout) view.findViewById(R.id.lv_nampil_foto);
-
+        searchResult = "";
+        foto = "";
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = sharedPrefs.edit();
         String getUserData = sharedPrefs.getString(Constant.KEY_SHAREDPREFS_USER_DATA, null);
@@ -156,23 +158,33 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
 
 
         search = (SearchView) view.findViewById(R.id.svCari);
-
+        search.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                llSearch.setLayoutParams(params);
+                return false;
+            }
+        });
         //String cr = search.getQuery().toString();
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                params.width = Screen.getWidth(getContext()) - 96;
+                params.width = Screen.getWidth(getContext()) - 64;
                 llSearch.setLayoutParams(params);
 
                 String location = query.toString();
                 List<Address> addressList = null;
-                if (location != null || !location.equals("")) {
-                    Geocoder geocoder = new Geocoder(getContext());
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
+                Geocoder geocoder = new Geocoder(getContext());
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (!location.equals("") && addressList != null) {
+                    searchResult = location;
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                     lt = address.getLatitude();
@@ -247,26 +259,8 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                 btnSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String urlHal = Constant.ENDPOINT_INSERT_ORDER;
-                        Log.d("link ni: ", urlHal);
-                        StringRequest req = new StringRequest(Request.Method.POST, urlHal, successListener(), errListener()){
-                            @Override
-                            protected Map<String, String> getParams() throws AuthFailureError {
-                                Map<String, String> params = new HashMap<String, String>();
-                                params.put("id", idus);
-                                params.put("name", namaUser);
-                                params.put("jenis", spjenis.getText().toString());
-                                params.put("mode", spMode.getText().toString());
-                                params.put("alamat", search.getQuery().toString());
-                                params.put("lat", String.valueOf(lt));
-                                params.put("lang", String.valueOf(lg));
-                                params.put("harga", etHarga.getText().toString());
-                                params.put("status", "Waiting");
-                                return params;
-                            }
-                        };
-
-                        AppsController.getInstance().addToRequestQueue(req);
+                        upload();
+//                        getDataPosisi();
                     }
                 });
                 return true;
@@ -366,6 +360,48 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
 
     }
 
+    private void upload() {
+        String urlHal = Constant.ENDPOINT_INSERT_ORDER;
+        Log.d("link ni: ", urlHal);
+        StringRequest req = new StringRequest(Request.Method.POST, urlHal, successListener(), errListener()){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("id", idus);
+                params.put("name", namaUser);
+                params.put("jenis", spjenis.getText().toString());
+                params.put("mode", spMode.getText().toString());
+                params.put("alamat", searchResult);
+                params.put("lat", String.valueOf(lt));
+                params.put("lang", String.valueOf(lg));
+                params.put("harga", etHarga.getText().toString());
+                Log.d("harga", etHarga.getText().toString());
+                params.put("status", "Waiting");
+                params.put("foto", foto);
+                return params;
+            }
+        };
+//        StringRequest req = new StringRequest(Request.Method.POST, urlHal, successListener(), errListener()){
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("id", "1");
+//                params.put("name", "galih");
+//                params.put("jenis", "spjenis.getText().toString()");
+//                params.put("mode", "spMode.getText().toString()");
+//                params.put("alamat", "search.getQuery().toString()");
+//                params.put("lat", "String.valueOf(lt)");
+//                params.put("lang", "String.valueOf(lg)");
+//                params.put("harga", "etHarga.getText().toString()");
+//                params.put("status", "Waiting");
+//                params.put("foto", "asfdfg");
+//                return params;
+//            }
+//        };
+
+        AppsController.getInstance().addToRequestQueue(req);
+    }
+
     private Response.ErrorListener errListener() {
         return new Response.ErrorListener() {
             @Override
@@ -453,8 +489,8 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
             rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos); //bm is the bitmap object
             byte[] b = baos.toByteArray();
 
-            String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-            Log.e("base", encodedImage);
+            foto = Base64.encodeToString(b, Base64.DEFAULT);
+            Log.e("base", foto);
         }
     }
 
@@ -507,7 +543,7 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                         //boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
                         if (locationAccepted){
-                            Toast.makeText(getContext(),"Permission Granted, Now you can access location data."
+                            Toast.makeText(getContext(),"OK Permission Granted, Now you can access location data."
                                     ,Toast.LENGTH_LONG).show();
                             //pindahLokasi();
                         }

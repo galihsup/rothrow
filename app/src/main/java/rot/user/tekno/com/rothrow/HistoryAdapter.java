@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.jenisSampah.setText(data.getJenisSp());
         holder.namaPembuang.setText(data.getNama());
         holder.statusSampah.setText(data.getStatus());
+        Glide.with(context)
+                .load(data.getUrlGambar())
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .dontAnimate().into(holder.fotoPembuang);
     }
 
     @Override
