@@ -19,6 +19,8 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -59,6 +61,7 @@ import java.util.Map;
 
 import rot.user.tekno.com.rothrow.AppsController;
 import rot.user.tekno.com.rothrow.HalamanUtamaActivity;
+import rot.user.tekno.com.rothrow.HistoryFragment;
 import rot.user.tekno.com.rothrow.R;
 import rot.user.tekno.com.rothrow.util.Constant;
 import rot.user.tekno.com.rothrow.util.MLocation;
@@ -426,8 +429,14 @@ public class HalamanUtamaFragment extends Fragment implements OnMapReadyCallback
                     if (status.equals("200"))
                     {
                         Toast.makeText(getContext(),"Order Sukses",Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getContext(), HalamanUtamaActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(getContext(), HalamanUtamaActivity.class);
+//                        startActivity(intent);
+                        Fragment fragment = new HistoryFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.container, fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
